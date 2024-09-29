@@ -4,11 +4,11 @@ const User = require('../models/User');
 // Get all users
 const getAllUsers = async (req, res) => {
   try {
-    const user = await User.find({ email: req.body.email });
+    const user = await User.find();
     if (!user) {
       return res.status(400).json({ message: 'Invalid email or password' });
     }
-    const isMatch = await comparePassword(req.body.password, user.password);
+    const isMatch = await comparePassword(req.body.password_hash, user.password);
     if (!isMatch) {
       return res.status(400).json({ message: 'Invalid email or password' });
     }
@@ -23,7 +23,7 @@ const getAllUsers = async (req, res) => {
 const createUser = async (req, res) => {
   try {
     const hashedPassword = await hashPassword(req.body.password);
-    const user = new User({ ...req.body, password: hashedPassword });
+    const user = new User({ ...req.body, password_hash: hashedPassword });
     await user.save();
     res.status(201).json(user);
   } catch (error) {
