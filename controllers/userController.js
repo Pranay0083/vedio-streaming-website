@@ -25,9 +25,10 @@ const loginUser = async (req, res) => {
       return res.status(400).json({ message: 'Invalid email or password' });
     }
     const token = jwt.sign({userId: user.user_id }, "d059e58d4e1fcf961aa360f3d5ef2d495123d53a320a49fb41f0dbf6c3643aee", { expiresIn: '1h' });
-
     res.status(200).json({ message: 'Login successful', userId: user._id, token: token });
+    console.log("sucessfull login")
   } catch (error) {
+    console.log("failed login")
     res.status(500).json({ message: 'Login error', error: error.message });
   }
 };
@@ -35,7 +36,7 @@ const loginUser = async (req, res) => {
 // Create a new user
 const createUser = async (req, res) => {
   try {
-    const { email, password, ...otherDetails } = req.body;
+    const { email, password, role, ...otherDetails } = req.body;
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(400).json({ message: 'Email already in use' });
@@ -44,9 +45,13 @@ const createUser = async (req, res) => {
     const user = new User({
       email,
       password_hash: hashedPassword,
+      role,
       ...otherDetails
     });
-    await user.save();
+    await user.save().catch((saveError) => {
+      console.error('Error saving user:', saveError);
+      throw saveError;
+    });
     res.status(201).json({ message: 'User created successfully', userId: user._id });
   } catch (error) {
     res.status(400).json({ message: 'Error creating user', error: error.message });
