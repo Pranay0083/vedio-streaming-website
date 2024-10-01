@@ -58,6 +58,15 @@ const createUser = async (req, res) => {
   }
 };
 
+const logoutUser = async (req, res) => {
+  try {
+    
+    res.status(200).json({ message: 'Logout successful' });
+  } catch (error) {
+    res.status(500).json({ message: 'Logout error', error: error.message });
+  }
+};
+
 // Get a user by ID
 const getUserById = async (req, res) => {
   try {
@@ -103,6 +112,7 @@ module.exports = {
   getAllUsers,
   loginUser,
   createUser,
+  logoutUser,
   getUserById,
   updateUserById,
   deleteUserById
