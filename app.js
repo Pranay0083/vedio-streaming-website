@@ -6,12 +6,16 @@ const categoryRoutes = require('./routes/categoryRoutes');
 const subscriptionRoutes = require('./routes/subscriptionsRoutes');
 const viewRoutes = require('./routes/viewRoutes');
 const commentRoutes = require('./routes/commentsRoutes');
+const cors = require('cors');
 require('dotenv').config();
 const morgan = require("morgan");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+app.use(cors({
+  origin: 'http://localhost:3001'
+}));
 app.use(express.json());
 app.use(morgan("dev"));
 
