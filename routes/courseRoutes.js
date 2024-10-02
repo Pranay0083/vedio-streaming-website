@@ -7,3 +7,5 @@ router.post('/', courseController.createCourse)
 router.put('/:id', courseController.updateCourseById)
 router.delete('/:id', courseController.deleteCourseById)
 router.get('/:id', courseController.getCourseById)
+
+module.exports = router;

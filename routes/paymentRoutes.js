@@ -7,3 +7,5 @@ router.post('/', paymentController.createPayment)
 router.put('/:id', paymentController.updatePaymentById)
 router.delete('/:id', paymentController.deletePaymentById)
 router.get('/:id', paymentController.getPaymentById)
+
+module.exports = router;

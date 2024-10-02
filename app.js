@@ -1,39 +1,35 @@
 const express = require('express');
-const mongoose = require('mongoose');
-const userRoutes = require('./routes/userRoutes');
-const videoRoutes = require('./routes/vedioRoutes');
-const categoryRoutes = require('./routes/categoryRoutes');
-const subscriptionRoutes = require('./routes/subscriptionsRoutes');
-const viewRoutes = require('./routes/viewRoutes');
-const commentRoutes = require('./routes/commentsRoutes');
-const cors = require('cors');
-require('dotenv').config();
+const userRoutes = require('./routes/userRoutes')
+const vedioRoutes = require('./routes/vedioRoutes')
+const paymentRoutes = require('./routes/paymentRoutes')
+const enrollmentRoutes = require('./routes/enrollmentRoutes')
+const courseRoutes = require('./routes/courseRoutes')
 const morgan = require("morgan");
+require('dotenv').config();
+const mongoose = require('mongoose');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-app.use(cors({
-  origin: 'http://localhost:3001'
-}));
 app.use(express.json());
 app.use(morgan("dev"));
 
-app.use('/users', userRoutes);
-app.use('/videos', videoRoutes);
-app.use('/categories', categoryRoutes);
-app.use('/subscriptions', subscriptionRoutes);
-app.use('/views', viewRoutes);
-app.use('/comments', commentRoutes);
-
+// app.use('/', (req, res) => {
+//   res.send('Hello World');
+// });
+app.use('/users', userRoutes)
+app.use('/vedio', vedioRoutes)
+app.use('/payment', paymentRoutes)
+app.use('/enrollment', enrollmentRoutes)
+app.use('/course', courseRoutes)
 
 mongoose.connect(process.env.MONGODB_URI)
-.then(() => {
-  console.log('Connected to MongoDB');
-})
-.catch((err) => {
-  console.error('Error connecting to MongoDB:', err);
-});
+  .then(() => {
+    console.log('Connected to MongoDB');
+  })
+  .catch((err) => {
+    console.error('Error connecting to MongoDB:', err);
+  });
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);

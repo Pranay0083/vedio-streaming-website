@@ -1,4 +1,6 @@
+const { hashPassword, comparePassword } = require('../utils/passwordUtils');
 const User = require('../models/User');
+const jwt = require('../utils/jwtUtils')
 
 const getAllUsers = async (req, res) => {
     try {
@@ -11,13 +13,55 @@ const getAllUsers = async (req, res) => {
 
 const createUser = async (req, res) => {
     try {
-        const newUser = new User(req.body);
-        await newUser.save();
-        res.status(201).json(newUser);
+        const { email, password, role } = req.body;
+        const existingUser = await User.findOne({ email });
+        if (existingUser) {
+            return res.status(400).json({ message: 'Email already in use' });
+        }
+        const hashedPassword = await hashPassword(password);
+        const user = new User({
+            email,
+            password_hash: hashedPassword,
+            role
+        });
+        await user.save().catch((saveError) => {
+            console.error('Error saving user:', saveError);
+            throw saveError;
+        });
+        res.status(201).json({ message: 'User created successfully', userId: user._id });
     } catch (error) {
-        res.status(400).json({ message: error.message });
+        res.status(400).json({ message: 'Error creating user', error: error.message });
     }
 };
+
+const loginUser = async (req, res) => {
+    try {
+      const { email, password } = req.body;
+      const user = await User.findOne({ email });
+      if (!user) {
+        return res.status(400).json({ message: 'Invalid email or password' });
+      }
+      const isMatch = await comparePassword(password, user.password_hash);
+      if (!isMatch) {
+        return res.status(400).json({ message: 'Invalid email or password' });
+      }
+      const token = jwt.generateToken(user)
+      res.status(200).json({ message: 'Login successful', userId: user._id, token: token });
+      console.log("sucessfull login")
+    } catch (error) {
+      console.log("failed login")
+      res.status(500).json({ message: 'Login error', error: error.message });
+    }
+  };
+
+const logoutUser = async (req, res) => {
+    try {
+        res.status(200).json({ message: 'Logout successful' });
+    } catch (error) {
+        res.status(500).json({ message: 'Logout error', error: error.message });
+    }
+};
+
 
 const getUserById = async (req, res) => {
     try {
@@ -52,6 +96,8 @@ const deleteUserById = async (req, res) => {
 module.exports = {
     getAllUsers,
     createUser,
+    loginUser,
+    logoutUser,
     getUserById,
     updateUserById,
     deleteUserById

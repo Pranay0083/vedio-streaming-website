@@ -7,3 +7,5 @@ router.post('/', enrollmentController.createEnrollment)
 router.put('/:id', enrollmentController.updateEnrollmentById)
 router.delete('/:id', enrollmentController.deleteEnrollmentById)
 router.get('/:id', enrollmentController.getEnrollmentById)
+
+module.exports = router;
