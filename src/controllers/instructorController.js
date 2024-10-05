@@ -3,7 +3,7 @@ const Course = require('../models/Course');
 
 exports.getAllInstructors = async (req, res, next) => {
   try {
-    const instructors = await User.find({ role: 'teacher' }).select('-password');
+    const instructors = await User.find({ role: 'teacher' }).select('-password_hash');
     res.json(instructors);
   } catch (error) {
     next(error);
@@ -12,7 +12,7 @@ exports.getAllInstructors = async (req, res, next) => {
 
 exports.getInstructor = async (req, res, next) => {
   try {
-    const instructor = await User.findOne({ _id: req.params.id, role: 'teacher' }).select('-password');
+    const instructor = await User.findOne({ _id: req.params.id, role: 'teacher' }).select('-password_hash');
     if (!instructor) {
       return res.status(404).json({ message: 'Instructor not found' });
     }
