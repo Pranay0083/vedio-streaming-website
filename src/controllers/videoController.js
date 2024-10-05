@@ -67,7 +67,7 @@ exports.deleteVideo = async (req, res, next) => {
     if (course.instructor.toString() !== req.user.id && req.user.role !== 'admin') {
       return res.status(403).json({ message: 'You can only delete videos in your own courses' });
     }
-    await video.findByIdAndDelete(req.params.id);
+    await Video.findByIdAndDelete(req.params.id);
     res.json({ message: 'Video deleted successfully' });
   } catch (error) {
     next(error);

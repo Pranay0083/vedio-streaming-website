@@ -59,7 +59,7 @@ exports.deleteCourse = async (req, res, next) => {
     if (course.instructor.toString() !== req.user.id && req.user.role !== 'admin') {
       return res.status(403).json({ message: 'You can only delete your own courses' });
     }
-    await course.findByIdAndDelete(req.params.id);
+    await Course.findByIdAndDelete(req.params.id);
     res.json({ message: 'Course deleted successfully' });
   } catch (error) {
     next(error);
