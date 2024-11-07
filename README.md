@@ -122,9 +122,24 @@ Here are the available API endpoints:
 ### Auth Routes
 
 - `POST /api/auth/register` - Register a new user
+  ```` 
+  {
+  "name": "John Doe",
+  "email": "john@example.com",
+  "password": "password123"
+  }
+  ````
 - `POST /api/auth/login` - Login a user
-- `POST /api/auth/logout` - Logout a user
+  ````
+  {
+  "email": "john@example.com",
+  "password": "password123"
+  }
+  ````
 - `GET /api/auth/me` - Get the currently authenticated user
+  ````
+  Authorization: Bearer <access_token>
+  ````
 
 ### Courses Routes
 
