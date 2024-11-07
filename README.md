@@ -114,69 +114,184 @@ const videoSchema = new mongoose.Schema({
 ```
 
 ## API Documentation
+### API Endpoints
 
-## API Endpoints
+### Student
 
-Here are the available API endpoints:
+1. **Register a new student**
+   - Endpoint: `POST /api/auth/register`
+   - Sample Data:
+     ```json
+     {
+       "name": "John Doe",
+       "email": "john@example.com",
+       "password": "password123"
+     }
+     ```
 
-### Auth Routes
+2. **Login as the student**
+   - Endpoint: `POST /api/auth/login`
+   - Sample Data:
+     ```json
+     {
+       "email": "john@example.com",
+       "password": "password123"
+     }
+   - This will return an access token that you can use for subsequent authenticated requests.
 
-- `POST /api/auth/register` - Register a new user
-  ```` 
-  {
-  "name": "John Doe",
-  "email": "john@example.com",
-  "password": "password123"
-  }
-  ````
-- `POST /api/auth/login` - Login a user
-  ````
-  {
-  "email": "john@example.com",
-  "password": "password123"
-  }
-  ````
-- `GET /api/auth/me` - Get the currently authenticated user
-  ````
-  Authorization: Bearer <access_token>
-  ````
+3. **Get the current user (student)**
+   - Endpoint: `GET /api/auth/me`
+   - Headers:
+     ```
+     Authorization: Bearer <access_token>
+     ```
 
-### Courses Routes
+4. **Get all courses**
+   - Endpoint: `GET /api/courses`
 
-- `GET /api/courses` - Get all courses
-- `GET /api/courses/:id` - Get a specific course
-- `POST /api/courses` - Create a new course (requires 'teacher' role)
-- `PUT /api/courses/:id` - Update a course (requires 'teacher' role)
-- `DELETE /api/courses/:id` - Delete a course (requires 'teacher' role)
+5. **Enroll in a course**
+   - Endpoint: `POST /api/enrollments/:courseId`
+   - Headers:
+     ```
+     Authorization: Bearer <access_token>
+     ```
 
-### Enrollments Routes
+6. **Get all enrollments (student)**
+   - Endpoint: `GET /api/enrollments`
+   - Headers:
+     ```
+     Authorization: Bearer <access_token>
+     ```
 
-- `GET /api/enrollments` - Get all enrollments (authenticated user)
-- `POST /api/enrollments/:courseId` - Create a new enrollment (authenticated user)
-- `DELETE /api/enrollments/:courseId` - Delete an enrollment (authenticated user)
+7. **Get a specific user (student)**
+   - Endpoint: `GET /api/users/:id`
+   - Headers:
+     ```
+     Authorization: Bearer <access_token>
+     ```
 
-### Instructors Routes
+8. **Update the student's profile**
+   - Endpoint: `PUT /api/users/:id`
+   - Headers:
+     ```
+     Authorization: Bearer <access_token>
+     ```
+   - Sample Data:
+     ```json
+     {
+       "name": "John Doe Updated"
+     }
+     ```
 
-- `GET /api/instructors` - Get all instructors
-- `GET /api/instructors/:id` - Get a specific instructor
+### Teacher
 
-### Users Routes
+1. **Register a new teacher**
+   - Endpoint: `POST /api/auth/register`
+   - Sample Data:
+     ```json
+     {
+       "name": "Jane Smith",
+       "email": "jane@example.com",
+       "password": "password456",
+       "role": "teacher"
+     }
+     ```
 
-- `GET /api/users/:id` - Get a specific user (authenticated user)
-- `PUT /api/users/:id` - Update a user (authenticated user)
-- `DELETE /api/users/:id` - Delete a user (authenticated user)
+2. **Login as the teacher**
+   - Endpoint: `POST /api/auth/login`
+   - Sample Data:
+     ```json
+     {
+       "email": "jane@example.com",
+       "password": "password456"
+     }
+   - This will return an access token that you can use for subsequent authenticated requests.
 
-### Videos Routes
+3. **Get the current user (teacher)**
+   - Endpoint: `GET /api/auth/me`
+   - Headers:
+     ```
+     Authorization: Bearer <access_token>
+     ```
 
-- `GET /api/videos/:courseId` - Get all videos for a course (authenticated user)
-- `GET /api/videos/:courseId/:videoId` - Get a specific video (authenticated user)
-- `POST /api/videos/:courseId` - Create a new video (requires 'teacher' role)
-- `PUT /api/videos/:courseId/:videoId` - Update a video (requires 'teacher' role)
-- `DELETE /api/videos/:courseId/:videoId` - Delete a video (requires 'teacher' role)
+4. **Create a new course**
+   - Endpoint: `POST /api/courses`
+   - Headers:
+     ```
+     Authorization: Bearer <access_token>
+     ```
+   - Sample Data:
+     ```json
+     {
+       "title": "Introduction to Web Development",
+       "description": "Learn the basics of web development from scratch.",
+       "price": 99.99,
+       "topics": ["HTML", "CSS", "JavaScript"]
+     }
+     ```
 
-### Payments Routes
+5. **Update an existing course**
+   - Endpoint: `PUT /api/courses/:id`
+   - Headers:
+     ```
+     Authorization: Bearer <access_token>
+     ```
+   - Sample Data:
+     ```json
+     {
+       "title": "Advanced Web Development",
+       "description": "Take your web development skills to the next level.",
+       "price": 149.99
+     }
+     ```
 
-- `POST /api/payments` - Handle payments
+6. **Delete a course**
+   - Endpoint: `DELETE /api/courses/:id`
+   - Headers:
+     ```
+     Authorization: Bearer <access_token>
+     ```
+
+7. **Create a new video for a course**
+   - Endpoint: `POST /api/videos/:courseId`
+   - Headers:
+     ```
+     Authorization: Bearer <access_token>
+     ```
+   - Sample Data:
+     ```json
+     {
+       "title": "Introduction to HTML",
+       "description": "Learn the basics of HTML structure and syntax.",
+       "url": "https://example.com/video1.mp4",
+       "duration": 900,
+       "order": 1
+     }
+     ```
+
+8. **Update an existing video**
+   - Endpoint: `PUT /api/videos/:courseId/:videoId`
+   - Headers:
+     ```
+     Authorization: Bearer <access_token>
+     ```
+   - Sample Data:
+     ```json
+     {
+       "title": "HTML Fundamentals",
+       "description": "Dive deeper into HTML elements and structure.",
+       "duration": 1200
+     }
+     ```
+
+9. **Delete a video**
+   - Endpoint: `DELETE /api/videos/:courseId/:videoId`
+   - Headers:
+     ```
+     Authorization: Bearer <access_token>
+     ```
+
+Make sure to replace `<access_token>` with the actual access token obtained during the login process.
 
 You can find more sample requests and responses for the other API endpoints in the project documentation.
 ## Error Handling
