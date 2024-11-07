@@ -115,120 +115,55 @@ const videoSchema = new mongoose.Schema({
 
 ## API Documentation
 
-### Authentication Routes
+## API Endpoints
 
-#### Register User
-```
-POST /api/auth/register
-Request:
-{
-  "name": "John Doe",
-  "email": "john@example.com",
-  "password": "password123",
-  "role": "student"
-}
-Response:
-{
-  "message": "User created successfully",
-  "userId": "user_id"
-}
-```
+Here are the available API endpoints:
 
-#### Login
-```
-POST /api/auth/login
-Request:
-{
-  "email": "john@example.com",
-  "password": "password123"
-}
-Response:
-{
-  "message": "Login successful",
-  "userId": "user_id",
-  "token": "jwt_token"
-}
-```
+### Auth Routes
 
-### Course Routes
+- `POST /api/auth/register` - Register a new user
+- `POST /api/auth/login` - Login a user
+- `POST /api/auth/logout` - Logout a user
+- `GET /api/auth/me` - Get the currently authenticated user
 
-#### Get All Courses
-```
-GET /api/courses
-Response:
-[
-  {
-    "title": "Introduction to Node.js",
-    "description": "A beginner's guide",
-    "instructor": {
-      "name": "Instructor Name"
-    }
-  }
-]
-```
+### Courses Routes
 
-#### Create Course
-```
-POST /api/courses
-Request:
-{
-  "title": "Introduction to Node.js",
-  "description": "A beginner's guide",
-  "instructor": "instructor_id"
-}
-Response:
-{
-  "message": "Course created successfully"
-}
-```
+- `GET /api/courses` - Get all courses
+- `GET /api/courses/:id` - Get a specific course
+- `POST /api/courses` - Create a new course (requires 'teacher' role)
+- `PUT /api/courses/:id` - Update a course (requires 'teacher' role)
+- `DELETE /api/courses/:id` - Delete a course (requires 'teacher' role)
 
-### Video Routes
+### Enrollments Routes
 
-#### Get Course Videos
-```
-GET /api/courses/:courseId/videos
-Request:
-Header: { "Authorization": "Bearer jwt_token" }
-Response:
-[
-  {
-    "title": "Intro to JavaScript",
-    "url": "video_url",
-    "duration": 120,
-    "order": 1
-  }
-]
-```
+- `GET /api/enrollments` - Get all enrollments (authenticated user)
+- `POST /api/enrollments/:courseId` - Create a new enrollment (authenticated user)
+- `DELETE /api/enrollments/:courseId` - Delete an enrollment (authenticated user)
 
-### Enrollment Routes
+### Instructors Routes
 
-#### Enroll in Course
-```
-POST /api/enrollments/:courseId
-Request:
-Header: { "Authorization": "Bearer jwt_token" }
-Response:
-{
-  "message": "Enrolled in course successfully"
-}
-```
+- `GET /api/instructors` - Get all instructors
+- `GET /api/instructors/:id` - Get a specific instructor
 
-### Payment Routes
+### Users Routes
 
-#### Create Payment Session
-```
-POST /api/payments/create-session
-Request:
-{
-  "Authorization": "Bearer jwt_token",
-  "courseId": "courseId"
-}
-Response:
-{
-  "message": "Payment session created successfully"
-}
-```
+- `GET /api/users/:id` - Get a specific user (authenticated user)
+- `PUT /api/users/:id` - Update a user (authenticated user)
+- `DELETE /api/users/:id` - Delete a user (authenticated user)
 
+### Videos Routes
+
+- `GET /api/videos/:courseId` - Get all videos for a course (authenticated user)
+- `GET /api/videos/:courseId/:videoId` - Get a specific video (authenticated user)
+- `POST /api/videos/:courseId` - Create a new video (requires 'teacher' role)
+- `PUT /api/videos/:courseId/:videoId` - Update a video (requires 'teacher' role)
+- `DELETE /api/videos/:courseId/:videoId` - Delete a video (requires 'teacher' role)
+
+### Payments Routes
+
+- `POST /api/payments` - Handle payments
+
+You can find more sample requests and responses for the other API endpoints in the project documentation.
 ## Error Handling
 
 The application implements custom error handling middleware to manage errors effectively. All API responses follow a consistent format for both successful operations and errors.
