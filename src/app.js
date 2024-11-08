@@ -12,12 +12,12 @@ const connectDB = require('./config/database');
 const dotenv = require('dotenv');
 const morgan = require("morgan");
 const cors = require('cors')
-app.use(cors())
+
 dotenv.config();
 
 const app = express();
 app.use(morgan("dev"));
-
+app.use(cors())
 app.use(express.json());
 
 connectDB();
