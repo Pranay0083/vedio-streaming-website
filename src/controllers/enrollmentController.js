@@ -31,6 +31,7 @@ exports.createEnrollment = async (req, res, next) => {
 
 exports.deleteEnrollment = async (req, res, next) => {
   try {
+    console.log(req.user.id)
     const enrollment = await Enrollment.findOneAndDelete({ user: req.user.id, course: req.params.courseId });
     if (!enrollment) {
       return res.status(404).json({ message: 'Enrollment not found' });

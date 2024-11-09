@@ -1,5 +1,3 @@
-// src/middleware/roleMiddleware.js
-
 const roleBasedMiddleware = (allowedRoles) => {
     return (req, res, next) => {
       const user = req.user;

@@ -4,8 +4,21 @@ const jwt = require('../utils/jwtUtils')
 
 exports.register = async (req, res, next) => {
   try {
-    const { name, email, password, role } = req.body;
-    console.log(1)
+    const {
+      name,
+      email,
+      password,
+      image,
+      expertise,
+      rating,
+      role,
+      students,
+      courses,
+      bio,
+      about,
+      achievements,
+      socialLinks
+    } = req.body;
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(400).json({ message: 'Email already in use' });
@@ -15,7 +28,16 @@ exports.register = async (req, res, next) => {
       name,
       email,
       password_hash: hashedPassword,
-      role
+      image,
+      expertise,
+      rating,
+      role,
+      students,
+      courses,
+      bio,
+      about,
+      achievements,
+      socialLinks
     });
     await user.save().catch((saveError) => {
       console.error('Error saving user:', saveError);
@@ -32,21 +54,19 @@ exports.login = async (req, res, next) => {
     const { email, password } = req.body;
     const user = await User.findOne({ email });
     if (!user) {
-      return res.status(400).json({ message: 'Invalid email or password' });
+      return res.status(400).json({ message: "user doesn't Exist with this mail" });
     }
     const isMatch = await comparePassword(password, user.password_hash);
     if (!isMatch) {
-      return res.status(400).json({ message: 'Invalid email or password' });
+      return res.status(400).json({ message: 'Invalid password' });
     }
     const token = jwt.generateToken(user)
     res.status(200).json({ message: 'Login successful', userId: user._id, token: token });
-    console.log("sucessfull login")
   } catch (error) {
-    console.log("failed login")
+    console.log("Failed login", error);
     res.status(500).json({ message: 'Login error', error: error.message });
   }
 };
-
 
 exports.logout = (req, res) => {
   res.json({ message: 'Logged out successfully' });
@@ -59,10 +79,9 @@ exports.getMe = async (req, res) => {
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
-    res.json(user);
+    res.status(200).json(user);
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Server error' });
   }
 };
-
