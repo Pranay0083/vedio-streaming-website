@@ -6,7 +6,6 @@ const courseRoutes = require('./routes/courses');
 const enrollmentRoutes = require('./routes/enrollments');
 const instructorRoutes = require('./routes/instructors');
 const paymentRoutes = require('./routes/payments');
-const errorHandler = require('./middleware/errorHandler');
 const connectDB = require('./config/database');
 const dotenv = require('dotenv');
 const morgan = require("morgan");
@@ -27,8 +26,6 @@ app.use('/api/courses', courseRoutes);
 app.use('/api/enrollments', enrollmentRoutes);
 app.use('/api/instructors', instructorRoutes);
 app.use('/api/payments', paymentRoutes); // this will be working soon
-
-app.use(errorHandler);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
