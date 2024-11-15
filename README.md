@@ -1,299 +1,173 @@
-# vedio-streaming-website
-# Education Platform
+# Learning Management System API
 
-A full-stack learning management system built with Node.js and MongoDB, designed to provide a comprehensive online learning experience.
+A robust education platform API built with Node.js, Express, and MongoDB for managing courses, enrollments, and user interactions.
 
 ## Features
+- 🔐 **Authentication & Authorization**
+- 👥 **User Management** (Student/Teacher/Admin roles)
+- 📚 **Course Management**
+- ✍️ **Enrollment System**
+- 💳 **Payment Integration** (Coming soon)
+- 🎯 **Role-based Access Control**
 
-- **User Management**
-  - Authentication & Authorization
-  - Role-based access control (Student, Teacher, Admin)
-  - User profile management
-
-- **Course Management**
-  - CRUD operations for courses
-  - Course enrollment system
-  - Video content management
-  - Payment integration
-
-- **Content Delivery**
-  - Structured video lessons
-  - Real-time comment systems
-  - Progress tracking
-
-- **Administration**
-  - Admin interface for platform management
-  - Instructor management
-  - Content moderation
-
-## Motivation
-
-The platform was developed to create a scalable and secure educational environment that prioritizes both usability and performance. Our focus was on building a user-friendly interface supported by robust backend architecture to ensure a seamless learning experience.
-
-## Getting Started
-
-### Prerequisites
-
+## Tech Stack
 - Node.js
+- Express
 - MongoDB
-- npm or yarn
+- JWT Authentication
+- bcryptjs
+- Mongoose
 
-### Installation
+## Installation
 
-1. Clone the repository
+### Clone the repository
 ```bash
-git clone https://github.com/yourusername/your-repo.git
+git clone <repository-url>
 ```
 
-2. Navigate to the project directory
+### Navigate to the project directory
 ```bash
 cd your-repo
 ```
 
-3. Install dependencies
+### Install dependencies
 ```bash
 npm install
 ```
 
-4. Create a `.env` file in the root directory with the following variables:
-```plaintext
+### Environment Setup
+Create a `.env` file in the root directory with the following variables:
+```env
 PORT=3000
 MONGO_URI=your_mongodb_connection_string
 JWT_SECRET=your_jwt_secret
 ```
 
-5. Start the application
+### Start the server
+#### Development
+```bash
+npm run dev
+```
+
+#### Production
 ```bash
 npm start
 ```
 
-## Database Schema
+## Usage
 
-### User Schema
-```javascript
-const userSchema = new mongoose.Schema({
-  name: { type: String, required: true },
-  email: { type: String, required: true, unique: true },
-  password_hash: { type: String, required: true },
-  role: { type: String, enum: ['student', 'teacher', 'admin'], default: 'student' },
-}, { timestamps: true });
+Start the server:
+```bash
+npm start
 ```
 
-### Course Schema
-```javascript
-const courseSchema = new mongoose.Schema({
-  title: { type: String, required: true },
-  description: { type: String, required: true },
-  instructor: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-  price: { type: Number, required: true },
-  isPaid: { type: Boolean, default: false },
-  topics: [String],
-}, { timestamps: true });
+Server runs on: [http://localhost:3000](http://localhost:3000)
+
+## API Endpoints
+
+### Authentication
+- **POST /api/auth/register** - Register user
+- **POST /api/auth/login** - Login user
+- **POST /api/auth/logout** - Logout user
+- **GET /api/auth/me** - Get current user
+
+### Courses
+- **GET /api/courses** - Get all courses
+- **GET /api/courses/:id** - Get specific course
+- **POST /api/courses** - Create course (Teacher only)
+- **PUT /api/courses/:id** - Update course (Teacher only)
+- **DELETE /api/courses/:id** - Delete course (Teacher only)
+
+### Enrollments
+- **GET /api/enrollments** - Get user enrollments
+- **POST /api/enrollments/:courseId** - Enroll in course
+- **DELETE /api/enrollments/:courseId** - Cancel enrollment
+
+### Users
+- **GET /api/users/:id** - Get user profile
+- **PUT /api/users/:id** - Update user profile
+- **DELETE /api/users/:id** - Delete user
+
+### Payments
+- **POST /api/payments/create-session** - Create payment session (Coming soon)
+
+## Data Models
+
+### User
+```json
+{
+  "name": "String",
+  "email": "String",
+  "password_hash": "String",
+  "role": ["student", "teacher", "admin"],
+  "image": "String",
+  "expertise": "String",
+  "rating": "Number",
+  "students": "Number",
+  "courses": "Number",
+  "bio": "String",
+  "about": "String",
+  "achievements": ["String"],
+  "socialLinks": {
+    "linkedin": "String",
+    "twitter": "String"
+  }
+}
 ```
 
-### Enrollment Schema
-```javascript
-const enrollmentSchema = new mongoose.Schema({
-  user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-  course: { type: mongoose.Schema.Types.ObjectId, ref: 'Course', required: true },
-  enrolledAt: { type: Date, default: Date.now },
-  completedAt: Date
-});
+### Course
+```json
+{
+  "title": "String",
+  "description": "String",
+  "instructor": "ObjectId",
+  "price": "Number",
+  "isPaid": "Boolean",
+  "topics": ["String"]
+}
 ```
 
-### Video Schema
-```javascript
-const videoSchema = new mongoose.Schema({
-  title: { type: String, required: true },
-  description: String,
-  course: { type: mongoose.Schema.Types.ObjectId, ref: 'Course', required: true },
-  url: { type: String, required: true },
-  duration: Number,
-  order: { type: Number, required: true }
-}, { timestamps: true });
+### Enrollment
+```json
+{
+  "user": "ObjectId",
+  "course": "ObjectId",
+  "enrolledAt": "Date",
+  "completedAt": "Date"
+}
 ```
 
-## API Documentation
-### API Endpoints
+### Payment
+```json
+{
+  "user": "ObjectId",
+  "course": "ObjectId",
+  "amount": "Number",
+  "status": ["pending", "completed", "failed"],
+  "paymentMethod": "String",
+  "transactionId": "String"
+}
+```
 
-### Student
-
-1. **Register a new student**
-   - Endpoint: `POST /api/auth/register`
-   - Sample Data:
-     ```json
-     {
-       "name": "John Doe",
-       "email": "john@example.com",
-       "password": "password123"
-     }
-     ```
-
-2. **Login as the student**
-   - Endpoint: `POST /api/auth/login`
-   - Sample Data:
-     ```json
-     {
-       "email": "john@example.com",
-       "password": "password123"
-     }
-   - This will return an access token that you can use for subsequent authenticated requests.
-
-3. **Get the current user (student)**
-   - Endpoint: `GET /api/auth/me`
-   - Headers:
-     ```
-     Authorization: Bearer <access_token>
-     ```
-
-4. **Get all courses**
-   - Endpoint: `GET /api/courses`
-
-5. **Enroll in a course**
-   - Endpoint: `POST /api/enrollments/:courseId`
-   - Headers:
-     ```
-     Authorization: Bearer <access_token>
-     ```
-
-6. **Get all enrollments (student)**
-   - Endpoint: `GET /api/enrollments`
-   - Headers:
-     ```
-     Authorization: Bearer <access_token>
-     ```
-
-7. **Get a specific user (student)**
-   - Endpoint: `GET /api/users/:id`
-   - Headers:
-     ```
-     Authorization: Bearer <access_token>
-     ```
-
-8. **Update the student's profile**
-   - Endpoint: `PUT /api/users/:id`
-   - Headers:
-     ```
-     Authorization: Bearer <access_token>
-     ```
-   - Sample Data:
-     ```json
-     {
-       "name": "John Doe Updated"
-     }
-     ```
-
-### Teacher
-
-1. **Register a new teacher**
-   - Endpoint: `POST /api/auth/register`
-   - Sample Data:
-     ```json
-     {
-       "name": "Jane Smith",
-       "email": "jane@example.com",
-       "password": "password456",
-       "role": "teacher"
-     }
-     ```
-
-2. **Login as the teacher**
-   - Endpoint: `POST /api/auth/login`
-   - Sample Data:
-     ```json
-     {
-       "email": "jane@example.com",
-       "password": "password456"
-     }
-   - This will return an access token that you can use for subsequent authenticated requests.
-
-3. **Get the current user (teacher)**
-   - Endpoint: `GET /api/auth/me`
-   - Headers:
-     ```
-     Authorization: Bearer <access_token>
-     ```
-
-4. **Create a new course**
-   - Endpoint: `POST /api/courses`
-   - Headers:
-     ```
-     Authorization: Bearer <access_token>
-     ```
-   - Sample Data:
-     ```json
-     {
-       "title": "Introduction to Web Development",
-       "description": "Learn the basics of web development from scratch.",
-       "price": 99.99,
-       "topics": ["HTML", "CSS", "JavaScript"]
-     }
-     ```
-
-5. **Update an existing course**
-   - Endpoint: `PUT /api/courses/:id`
-   - Headers:
-     ```
-     Authorization: Bearer <access_token>
-     ```
-   - Sample Data:
-     ```json
-     {
-       "title": "Advanced Web Development",
-       "description": "Take your web development skills to the next level.",
-       "price": 149.99
-     }
-     ```
-
-6. **Delete a course**
-   - Endpoint: `DELETE /api/courses/:id`
-   - Headers:
-     ```
-     Authorization: Bearer <access_token>
-     ```
-
-7. **Create a new video for a course**
-   - Endpoint: `POST /api/videos/:courseId`
-   - Headers:
-     ```
-     Authorization: Bearer <access_token>
-     ```
-   - Sample Data:
-     ```json
-     {
-       "title": "Introduction to HTML",
-       "description": "Learn the basics of HTML structure and syntax.",
-       "url": "https://example.com/video1.mp4",
-       "duration": 900,
-       "order": 1
-     }
-     ```
-
-8. **Update an existing video**
-   - Endpoint: `PUT /api/videos/:courseId/:videoId`
-   - Headers:
-     ```
-     Authorization: Bearer <access_token>
-     ```
-   - Sample Data:
-     ```json
-     {
-       "title": "HTML Fundamentals",
-       "description": "Dive deeper into HTML elements and structure.",
-       "duration": 1200
-     }
-     ```
-
-9. **Delete a video**
-   - Endpoint: `DELETE /api/videos/:courseId/:videoId`
-   - Headers:
-     ```
-     Authorization: Bearer <access_token>
-     ```
-
-Make sure to replace `<access_token>` with the actual access token obtained during the login process.
-
-You can find more sample requests and responses for the other API endpoints in the project documentation.
 ## Error Handling
+Centralized error handling middleware for consistent error responses across the API.
 
-The application implements custom error handling middleware to manage errors effectively. All API responses follow a consistent format for both successful operations and errors.
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch:
+```bash
+git checkout -b feature/your-feature
+```
+3. Commit your changes:
+```bash
+git commit -m "Add your feature"
+```
+4. Push to the branch:
+```bash
+git push origin feature/your-feature
+```
+5. Open a pull request
+
+## Contact
+For any inquiries, please contact [pranay.vishwakarma7400@gmail.com].
