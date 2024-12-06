@@ -21,6 +21,10 @@ app.use(express.json());
 
 connectDB();
 
+app.get('/', (req, res) => {
+  res.send('you can access sample frontend of this at <a href="https://think-box-an-e-learning-platform.vercel.app">https://think-box-an-e-learning-platform.vercel.app</a>. Note: This frontend is in development.');
+});
+
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/courses', courseRoutes);
